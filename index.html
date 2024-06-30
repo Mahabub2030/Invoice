@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dammam Airport Company (DACO) - Invoice System</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+</head>
+
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+        <!-- Header -->
+        <!-- <header class="flex justify-between items-center bg-white shadow p-4 rounded mb-4">
+            <div>
+                <h1 class="text-2xl font-bold">Dammam Airport Company (DACO)</h1>
+                <p class="text-gray-600">Supply Chain Department - Commercial Comparison</p>
+            </div>
+            <div>
+                <label for="supplier1" class="block text-gray-600">Supplier 1:</label>
+                <input type="text" id="supplier1" class="border rounded px-2 py-1 mb-2" oninput="saveSupplierNames()">
+                <label for="supplier2" class="block text-gray-600">Supplier 2:</label>
+                <input type="text" id="supplier2" class="border rounded px-2 py-1 mb-2" oninput="saveSupplierNames()">
+                <label for="supplier3" class="block text-gray-600">Supplier 3:</label>
+                <input type="text" id="supplier3" class="border rounded px-2 py-1" oninput="saveSupplierNames()">
+            </div>
+        </header> -->
+        <header class="flex justify-between items-center bg-white shadow p-4 rounded mb-4">
+            <div>
+                <h1 class="text-2xl font-bold">Dammam Airport Company (DACO)</h1>
+                <p class="text-gray-600">Supply Chain Department - Commercial Comparison</p>
+            </div>
+            <div>
+                <label for="supplier1" class="block text-gray-600">Supplier 1:</label>
+                <input type="text" id="supplier1" class="border rounded px-2 py-1 mb-2" oninput="saveSupplierNames()">
+                <label for="supplier2" class="block text-gray-600">Supplier 2:</label>
+                <input type="text" id="supplier2" class="border rounded px-2 py-1 mb-2" oninput="saveSupplierNames()">
+                <label for="supplier3" class="block text-gray-600">Supplier 3:</label>
+                <input type="text" id="supplier3" class="border rounded px-2 py-1" oninput="saveSupplierNames()">
+            </div>
+        </header>
+        
+
+        <!-- Invoice Table -->
+        <div class="bg-white shadow rounded p-4 mb-4">
+            <table id="comparisonTable" class="min-w-full border-collapse w-full">
+                <thead class="bg-gray-200">
+                    <!-- <tr>
+                        <th class="border px-4 py-2" colspan="5"></th>
+                        <th contenteditable="true"class="border px-4 py-2" colspan="2">AL Yaseen Agricultar</th>
+                        <th  contenteditable="true" class="border px-4 py-2" colspan="2">Al Taleb Group</th>
+                        <th  contenteditable="true" class="border px-4 py-2" colspan="2">Alam Albiad</th>
+                        <th  contenteditable="true" class="border px-4 py-2"></th>
+                    </tr> -->
+
+                    <tr>
+                        <th class="border px-4 py-2" colspan="5"></th>
+                        <th class="border px-4 py-2" colspan="2" id="supplierHeader1">AL Yaseen Agricultar</th>
+                        <th class="border px-4 py-2" colspan="2" id="supplierHeader2">Al Taleb Group</th>
+                        <th class="border px-4 py-2" colspan="2" id="supplierHeader3">Alam Albiad</th>
+                        <th class="border px-4 py-2"></th>
+                    </tr>
+                    <tr>
+                        <th class="border px-4 py-2">S.N</th>
+                        <th class="border px-4 py-2">Services No</th>
+                        <th class="border px-4 py-2">Description</th>
+                        <th class="border px-4 py-2">Unit</th>
+                        <th class="border px-4 py-2">Qty</th>
+                        <th class="border px-4 py-2">Unit Price</th>
+                        <th class="border px-4 py-2">Total Price</th>
+                        <th class="border px-4 py-2">Unit Price</th>
+                        <th class="border px-4 py-2">Total Price</th>
+                        <th class="border px-4 py-2">Unit Price</th>
+                        <th class="border px-4 py-2">Total Price</th>
+                        <th class="border px-4 py-2">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Sample data row -->
+                </tbody>
+                <tfoot class="bg-gray-200">
+                    <tr class="font-bold">
+                        <td class="border px-4 py-2" colspan="6">Subtotal</td>
+                        <td class="border px-4 py-2" id="subtotal">0.00</td>
+                        <td class="border px-4 py-2" colspan="2" id="subtotal2">0.00</td>
+                        <td class="border px-4 py-2" colspan="2" id="subtotal3">0.00</td>
+                    </tr>
+                    
+                    <tr class="font-bold">
+                        <td class="border px-4 py-2" colspan="6">VAT (15%)</td>
+                        <td class="border px-4 py-2" id="vat">0.00</td>
+                        <td class="border px-4 py-2" colspan="2" id="vat2">0.00</td>
+                        <td class="border px-4 py-2" colspan="2" id="vat3">0.00</td>
+                    </tr>
+
+                    <tr class="font-bold">
+                        <td class="border px-4 py-2" colspan="6">Total (with VAT)</td>
+                        <td class="border px-4 py-2" id="total">0.00</td>
+                        <td class="border px-4 py-2" colspan="2" id="total2">0.00</td>
+                        <td class="border px-4 py-2" colspan="2" id="total3">0.00</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <!-- Buttons for actions -->
+        <div class="flex justify-end mb-4">
+            <button class="   bg-indigo-500  px-4 py-2 rounded mr-2 text-white hover:bg-slate-900"> <a href="./lower.html">Check_Lowprice</a></button>
+            <button class="   bg-indigo-500  px-4 py-2 rounded mr-2 text-white hover:bg-slate-900"> <a href="./history.html">History</a></button>
+            <button class="bg-blue-500 text-white px-4 py-2 rounded mr-2 " onclick="addRow()">Add Row</button>
+            <button class="bg-red-500 text-white px-4 py-2 rounded mr-2" onclick="removeAllRows()">Remove All Rows</button>
+            <button class="bg-green-500 text-white px-4 py-2 rounded mr-2" onclick="downloadExcel()">Download as Excel</button>
+            <button class="bg-purple-500 text-white px-4 py-2 rounded mr-2" onclick="downloadPDF()">Download as PDF</button>
+            <input type="file" id="uploadPdfInput" accept="application/pdf" onchange="uploadPDF(event)" style="display:none;" multiple>
+            <button class="bg-indigo-500 text-white px-4 py-2 rounded" onclick="document.getElementById('uploadPdfInput').click()">Upload PDF</button>
+        </div>
+
+        <!-- Uploaded PDF Section -->
+        <div id="uploadedPdfContainer" class="flex flex-wrap mb-4"></div>
+
+        <!-- Comments Section -->
+        <div class="bg-white shadow rounded p-4">
+            <h2 class="text-xl font-bold mb-2">Comments</h2>
+            <div class="flex mb-4">
+                <input type="text" id="commentInput" class="flex-grow border rounded px-4 py-2 mr-2" placeholder="Enter your comment">
+                <button class="bg-blue-500 text-white px-4 py-2 rounded" onclick="submitComment()">Submit</button>
+                <button class="bg-gray-500 text-white px-4 py-2 rounded ml-2" onclick="clearComment()">Clear</button>
+            </div>
+            <div class="comments" id="comments"></div>
+        </div>
+    </div>
+   
+    <Script>
+
+        //  // Save supplier names to localStorage
+        //  function saveSupplierNames() {
+        //     const supplier1 = document.getElementById('supplier1').value;
+        //     const supplier2 = document.getElementById('supplier2').value;
+        //     const supplier3 = document.getElementById('supplier3').value;
+
+        //     localStorage.setItem('supplier1', supplier1);
+        //     localStorage.setItem('supplier2', supplier2);
+        //     localStorage.setItem('supplier3', supplier3);
+
+        //     document.getElementById('supplierHeader1').innerText = supplier1 || "AL Yaseen Agricultar";
+        //     document.getElementById('supplierHeader2').innerText = supplier2 || "Al Taleb Group";
+        //     document.getElementById('supplierHeader3').innerText = supplier3 || "Alam Albiad";
+        // }
+
+        // // Load supplier names from localStorage
+        // function loadSupplierNames() {
+        //     const supplier1 = localStorage.getItem('supplier1') || "AL Yaseen Agricultar";
+        //     const supplier2 = localStorage.getItem('supplier2') || "Al Taleb Group";
+        //     const supplier3 = localStorage.getItem('supplier3') || "Alam Albiad";
+
+        //     document.getElementById('supplier1').value = supplier1;
+        //     document.getElementById('supplier2').value = supplier2;
+        //     document.getElementById('supplier3').value = supplier3;
+
+        //     document.getElementById('supplierHeader1').innerText = supplier1;
+        //     document.getElementById('supplierHeader2').innerText = supplier2;
+        //     document.getElementById('supplierHeader3').innerText = supplier3;
+        // }
+
+        // // Load supplier names on page load
+        // window.onload = loadSupplierNames;
+
+         // Save supplier names to localStorage
+         function saveSupplierNames() {
+            const supplier1 = document.getElementById('supplier1').value;
+            const supplier2 = document.getElementById('supplier2').value;
+            const supplier3 = document.getElementById('supplier3').value;
+
+            localStorage.setItem('supplier1', supplier1);
+            localStorage.setItem('supplier2', supplier2);
+            localStorage.setItem('supplier3', supplier3);
+
+            // Update the table headers dynamically
+            document.getElementById('supplierHeader1').innerText = supplier1 || "AL Yaseen Agricultar";
+            document.getElementById('supplierHeader2').innerText = supplier2 || "Al Taleb Group";
+            document.getElementById('supplierHeader3').innerText = supplier3 || "Alam Albiad";
+        }
+
+        // Load supplier names from localStorage
+        function loadSupplierNames() {
+            const supplier1 = localStorage.getItem('supplier1') || "AL Yaseen Agricultar";
+            const supplier2 = localStorage.getItem('supplier2') || "Al Taleb Group";
+            const supplier3 = localStorage.getItem('supplier3') || "Alam Albiad";
+
+            document.getElementById('supplier1').value = supplier1;
+            document.getElementById('supplier2').value = supplier2;
+            document.getElementById('supplier3').value = supplier3;
+
+            document.getElementById('supplierHeader1').innerText = supplier1;
+            document.getElementById('supplierHeader2').innerText = supplier2;
+            document.getElementById('supplierHeader3').innerText = supplier3;
+        }
+
+        // Load supplier names on page load
+        window.onload = loadSupplierNames;
+        
+        
+        //   // Save the table state to localStorage
+  function saveTableState() {
+    const tableData = [];
+    document.querySelectorAll('#comparisonTable tbody tr').forEach(row => {
+        const rowData = [];
+        row.querySelectorAll('td').forEach(cell => {
+            if (cell.children.length > 0 && cell.children[0].tagName === "SELECT") {
+                // If it's a select dropdown, save the selected value
+                rowData.push(cell.children[0].value);
+            } else {
+                rowData.push(cell.innerHTML);
+            }
+        });
+        tableData.push(rowData);
+    });
+    localStorage.setItem('tableState', JSON.stringify(tableData));
+}
+
+// Load the table state from localStorage
+function loadTableState() {
+    const tableData = JSON.parse(localStorage.getItem('tableState'));
+    if (tableData) {
+        document.querySelector('#comparisonTable tbody').innerHTML = ''; // Clear existing rows
+        tableData.forEach((rowData, index) => {
+            addRow(false); // Add a new row but don't update totals yet
+            const row = document.querySelector('#comparisonTable tbody tr:last-child');
+            row.querySelectorAll('td').forEach((cell, i) => {
+                if (cell.children.length > 0 && cell.children[0].tagName === "SELECT") {
+                    // If it's a select dropdown, set the selected value
+                    cell.children[0].value = rowData[i];
+                } else {
+                    cell.innerHTML = rowData[i];
+                }
+            });
+        });
+        updateTotals();
+    }
+}
+
+// Add a new row to the table
+// Add a new row to the table
+// function addRow(updateTotalsFlag = true) {
+//         const row = document.createElement('tr');
+//         row.innerHTML = `
+//             <td class="border px-4 py-2">${document.querySelectorAll('#comparisonTable tbody tr').length + 1}</td>
+//             <td class="border px-4 py-2">
+//                 <select class="w-full" onchange="saveTableState()">
+    
+//                     <option value="B-Nine plant growth reg. SWG 1KG">6840l352683</option>
+//                     <option value="B-Nine plant growth reg. SWG 1KG">6840L413853</option>
+//                     <option value="B-Nine plant growth reg. SWG 1KG">B-Nine plant growth reg. SWG 1KG">8720L107601</option>
+//                     <option value="8720L107602">8720L107602</option>
+    
+    
+//                 </select>
+//             </td>
+//             <td class="border px-4 py-2">
+//                 <select class="w-full" onchange="saveTableState()">
+    
+//                     <option value="6840l352683">B-Nine plant growth reg. SWG 1KG</option>
+//                     <option value="6840L413853">B-Nine plant growth reg. SWG 1KG</option>
+//                     <option value="8720L107601">B-Nine plant growth reg. SWG 1KG</option>
+
+
+//                 </select>
+//             </td>
+//             <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">IT</td>
+//             <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">0</td>
+//             <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">0</td>
+//             <td class="border px-4 py-2 total-price">0.00</td>
+//             <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">0</td>
+//             <td class="border px-4 py-2 total-price">0.00</td>
+//             <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">0</td>
+//             <td class="border px-4 py-2 total-price">0.00</td>
+//             <td class="border px-4 py-2"><button class="text-red-500" onclick="removeRow(this)">Remove</button></td>
+//         `;
+//         document.querySelector('#comparisonTable tbody').appendChild(row);
+//         if (updateTotalsFlag) updateTotals();
+//     }
+
+ // Function to save supplier names to localStorage
+ function saveSupplierNames() {
+            const supplier1 = document.getElementById('supplier1').value;
+            const supplier2 = document.getElementById('supplier2').value;
+            const supplier3 = document.getElementById('supplier3').value;
+
+            localStorage.setItem('supplier1', supplier1);
+            localStorage.setItem('supplier2', supplier2);
+            localStorage.setItem('supplier3', supplier3);
+
+            document.getElementById('supplierHeader1').innerText = supplier1 || "AL Yaseen Agricultar";
+            document.getElementById('supplierHeader2').innerText = supplier2 || "Al Taleb Group";
+            document.getElementById('supplierHeader3').innerText = supplier3 || "Alam Albiad";
+        }
+
+        // Function to load supplier names from localStorage
+        function loadSupplierNames() {
+            const supplier1 = localStorage.getItem('supplier1') || "AL Yaseen Agricultar";
+            const supplier2 = localStorage.getItem('supplier2') || "Al Taleb Group";
+            const supplier3 = localStorage.getItem('supplier3') || "Alam Albiad";
+
+            document.getElementById('supplier1').value = supplier1;
+            document.getElementById('supplier2').value = supplier2;
+            document.getElementById('supplier3').value = supplier3;
+
+            document.getElementById('supplierHeader1').innerText = supplier1;
+            document.getElementById('supplierHeader2').innerText = supplier2;
+            document.getElementById('supplierHeader3').innerText = supplier3;
+        }
+
+        // Function to save the current state of the table to localStorage
+        function saveTableState() {
+            const tableRows = document.querySelectorAll('#comparisonTable tbody tr');
+            const tableData = Array.from(tableRows).map(row => {
+                return Array.from(row.cells).map(cell => {
+                    if (cell.querySelector('select')) {
+                        return cell.querySelector('select').value;
+                    } else if (cell.querySelector('input')) {
+                        return cell.querySelector('input').value;
+                    } else {
+                        return cell.innerText.trim();
+                    }
+                });
+            });
+            localStorage.setItem('tableData', JSON.stringify(tableData));
+        }
+
+        // Function to load the table state from localStorage
+        // function loadTableState() {
+        //     const tableData = JSON.parse(localStorage.getItem('tableData') || '[]');
+        //     const tbody = document.querySelector('#comparisonTable tbody');
+        //     tbody.innerHTML = ''; // Clear existing rows
+        //     tableData.forEach((rowData, rowIndex) => {
+        //         const row = document.createElement('tr');
+        //         row.innerHTML = `
+        //             <td class="border px-4 py-2">${rowIndex + 1}</td>
+        //             <td class="border px-4 py-2">
+        //                 <select class="w-full" onchange="saveTableState()">
+        //                     <option value="6840l352683" ${rowData[1] === '6840l352683' ? 'selected' : ''}>6840l352683</option>
+        //                     <option value="6840L413853" ${rowData[1] === '6840L413853' ? 'selected' : ''}>6840L413853</option>
+        //                     <option value="8720L107601" ${rowData[1] === '8720L107601' ? 'selected' : ''}>8720L107601</option>
+        //                     <option value="8720L107602" ${rowData[1] === '8720L107602' ? 'selected' : ''}>8720L107602</option>
+        //                 </select>
+        //             </td>
+        //             <td class="border px-4 py-2">
+        //                 <select class="w-full" onchange="saveTableState()">
+        //                     <option value="B-Nine plant growth reg. SWG 1KG" ${rowData[2] === 'B-Nine plant growth reg. SWG 1KG' ? 'selected' : ''}>B-Nine plant growth reg. SWG 1KG</option>
+        //                     <option value="B-Nine plant growth reg. SWG 1KG" ${rowData[2] === 'B-Nine plant growth reg. SWG 1KG' ? 'selected' : ''}>B-Nine plant growth reg. SWG 1KG</option>
+        //                     <option value="B-Nine plant growth reg. SWG 1KG" ${rowData[2] === 'B-Nine plant growth reg. SWG 1KG' ? 'selected' : ''}>B-Nine plant growth reg. SWG 1KG</option>
+        //                 </select>
+        //             </td>
+        //             <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">${rowData[3] || ''}</td>
+        //             <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">${rowData[4] || '0'}</td>
+        //             <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">${rowData[5] || '0'}</td>
+        //             <td class="border px-4 py-2 total-price">${rowData[6] || '0.00'}</td>
+        //             <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">${rowData[7] || '0'}</td>
+        //             <td class="border px-4 py-2 total-price">${rowData[8] || '0.00'}</td>
+        //             <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">${rowData[9] || '0'}</td>
+        //             <td class="border px-4 py-2 total-price">${rowData[10] || '0.00'}</td>
+        //             <td class="border px-4 py-2"><button class="text-red-500" onclick="removeRow(this)">Remove</button></td>
+        //         `;
+        //         tbody.appendChild(row);
+        //     });
+        // }
+
+        // // Function to add a new row to the table
+        // function addRow(updateTotalsFlag = true) {
+        //     const row = document.createElement('tr');
+        //     row.innerHTML = `
+        //         <td class="border px-4 py-2">${document.querySelectorAll('#comparisonTable tbody tr').length + 1}</td>
+        //         <td class="border px-4 py-2">
+        //             <select class="w-full" onchange="saveTableState()">
+        //                 <option value="6840l352683">6840l352683</option>
+        //                 <option value="6840L413853">6840L413853</option>
+        //                 <option value="8720L107601">8720L107601</option>
+        //                 <option value="8720L107602">8720L107602</option>
+        //             </select>
+        //         </td>
+        //         <td class="border px-4 py-2">
+        //             <select class="w-full" onchange="saveTableState()">
+        //                 <option value="B-Nine plant growth reg. SWG 1KG">B-Nine plant growth reg. SWG 1KG</option>
+        //                 <option value="B-Nine plant growth reg. SWG 1KG">B-Nine plant growth reg. SWG 1KG</option>
+        //                 <option value="B-Nine plant growth reg. SWG 1KG">B-Nine plant growth reg. SWG 1KG</option>
+        //             </select>
+        //         </td>
+        //         <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">IT</td>
+        //         <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">0</td>
+        //         <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">0</td>
+        //         <td class="border px-4 py-2 total-price">0.00</td>
+        //         <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">0</td>
+        //         <td class="border px-4 py-2 total-price">0.00</td>
+        //         <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">0</td>
+        //         <td class="border px-4 py-2 total-price">0.00</td>
+        //         <td class="border px-4 py-2"><button class="text-red-500" onclick="removeRow(this)">Remove</button></td>
+        //     `;
+        //     document.querySelector('#comparisonTable tbody').appendChild(row);
+        //     if (updateTotalsFlag) updateTotals();
+        //     saveTableState(); // Save state after adding a row
+        // }
+
+        // // Function to update row (triggered on input change)
+        // function updateRow(cell) {
+        //     saveTableState(); // Save state whenever a cell is updated
+        // }
+
+        // // Function to remove a row from the table
+        // function removeRow(button) {
+        //     button.closest('tr').remove();
+        //     saveTableState(); // Save state after removing a row
+        //     updateTotals(); // Recalculate totals after row removal
+        // }
+
+        // // Function to calculate totals (not fully implemented in the provided code)
+        // function updateTotals() {
+        //     // Add your logic to update totals here if required
+        // }
+
+        // // Load supplier names and table state on page load
+        // window.onload = () => {
+        //     loadSupplierNames();
+        //     loadTableState();
+        // };
+
+        function loadTableState() {
+            const tableData = JSON.parse(localStorage.getItem('tableData') || '[]');
+            const tbody = document.querySelector('#comparisonTable tbody');
+            tbody.innerHTML = ''; // Clear existing rows
+            tableData.forEach((rowData, rowIndex) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="border px-4 py-2">${rowIndex + 1}</td>
+                    <td class="border px-4 py-2">
+                        <select class="w-full" onchange="updateCol3Options(this)">
+                            <option value="6840l352683" ${rowData[1] === '6840l352683' ? 'selected' : ''}>6840l352683</option>
+                            <option value="6840L413853" ${rowData[1] === '6840L413853' ? 'selected' : ''}>6840L413853</option>
+                            <option value="8720L107601" ${rowData[1] === '8720L107601' ? 'selected' : ''}>8720L107601</option>
+                            <option value="8720L107602" ${rowData[1] === '8720L107602' ? 'selected' : ''}>8720L107602</option>
+                        </select>
+                    </td>
+                    <td class="border px-4 py-2">
+                        <select class="w-full" onchange="saveTableState()">
+                            <!-- Options will be dynamically populated based on col2 selection -->
+                        </select>
+                    </td>
+                    <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">${rowData[3] || ''}</td>
+                    <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">${rowData[4] || '0'}</td>
+                    <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">${rowData[5] || '0'}</td>
+                    <td class="border px-4 py-2 total-price">${rowData[6] || '0.00'}</td>
+                    <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">${rowData[7] || '0'}</td>
+                    <td class="border px-4 py-2 total-price">${rowData[8] || '0.00'}</td>
+                    <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">${rowData[9] || '0'}</td>
+                    <td class="border px-4 py-2 total-price">${rowData[10] || '0.00'}</td>
+                    <td class="border px-4 py-2"><button class="text-red-500" onclick="removeRow(this)">Remove</button></td>
+                `;
+                tbody.appendChild(row);
+                updateCol3Options(row.querySelector('select')); // Initialize col3 based on loaded data
+            });
+        }
+
+        // Function to update options in col3 based on selection in col2
+        function updateCol3Options(selectElement) {
+            const selectedValue = selectElement.value;
+            const col3Select = selectElement.parentElement.nextElementSibling.querySelector('select');
+            col3Select.innerHTML = ''; // Clear existing options
+            const descriptions = descriptionOptions[selectedValue] || [];
+            descriptions.forEach(description => {
+                col3Select.innerHTML += `<option value="${description}">${description}</option>`;
+            });
+            saveTableState(); // Save state after updating col3 options
+        }
+
+        // Function to update row (triggered on input change)
+        function updateRow(cell) {
+            saveTableState(); // Save state whenever a cell is updated
+        }
+
+        // Function to remove a row from the table
+        function removeRow(button) {
+            button.closest('tr').remove();
+            saveTableState(); // Save state after removing a row
+            updateTotals(); // Recalculate totals after row removal
+        }
+
+        // Function to calculate totals (not fully implemented in the provided code)
+        function updateTotals() {
+            // Add your logic to update totals here if required
+        }
+
+        // Function to add a new row to the table
+        function addRow(updateTotalsFlag = true) {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="border px-4 py-2">${document.querySelectorAll('#comparisonTable tbody tr').length + 1}</td>
+                <td class="border px-4 py-2">
+                    <select class="w-full" onchange="updateCol3Options(this)">
+                        <option value="6840l352683">6840l352683</option>
+                        <option value="6840L413853">6840L413853</option>
+                        <option value="8720L107601">8720L107601</option>
+                        <option value="8720L107602">8720L107602</option>
+                    </select>
+                </td>
+                <td class="border px-4 py-2">
+                    <select class="w-full" onchange="saveTableState()">
+                        <!-- Options will be dynamically populated based on col2 selection -->
+                    </select>
+                </td>
+                <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">IT</td>
+                <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">0</td>
+                <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">0</td>
+                <td class="border px-4 py-2 total-price">0.00</td>
+                <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">0</td>
+                <td class="border px-4 py-2 total-price">0.00</td>
+                <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">0</td>
+                <td class="border px-4 py-2 total-price">0.00</td>
+                <td class="border px-4 py-2"><button class="text-red-500" onclick="removeRow(this)">Remove</button></td>
+            `;
+            document.querySelector('#comparisonTable tbody').appendChild(row);
+            updateCol3Options(row.querySelector('select')); // Initialize col3 options
+            if (updateTotalsFlag) updateTotals();
+            saveTableState(); // Save state after adding a row
+        }
+
+        // Predefined options for col3 based on col2 selections (server numbers mapped to descriptions)
+        const descriptionOptions = {
+            '6840l352683': ['Description 000',],
+            '6840L413853': ['Description B', ],
+            '8720L107601': ['Option X',],
+            '8720L107602': ['Detail P',]
+        };
+
+        // Load supplier names and table state on page load
+        window.onload = () => {
+            loadSupplierNames();
+            loadTableState();
+        };
+
+// Remove a specific row
+function removeRow(button) {
+    button.closest('tr').remove();
+    updateTotals();
+}
+
+// Remove all rows
+function removeAllRows() {
+    document.querySelector('#comparisonTable tbody').innerHTML = '';
+    updateTotals();
+}
+
+// Update row calculations and totals
+function updateRow(cell) {
+    const row = cell.closest('tr');
+    const qty = parseFloat(row.cells[4].innerText) || 0;
+    const unitPrice1 = parseFloat(row.cells[5].innerText) || 0;
+    const totalPrice1 = qty * unitPrice1;
+    row.cells[6].innerText = totalPrice1.toFixed(2);
+
+    const unitPrice2 = parseFloat(row.cells[7].innerText) || 0;
+    const totalPrice2 = qty * unitPrice2;
+    row.cells[8].innerText = totalPrice2.toFixed(2);
+
+    const unitPrice3 = parseFloat(row.cells[9].innerText) || 0;
+    const totalPrice3 = qty * unitPrice3;
+    row.cells[10].innerText = totalPrice3.toFixed(2);
+
+    updateTotals();
+}
+
+// Update all totals
+function updateTotals() {
+    let subtotal = 0;
+    let subtotal2 = 0;
+    let subtotal3 = 0;
+
+    document.querySelectorAll('#comparisonTable tbody tr').forEach(row => {
+        subtotal += parseFloat(row.cells[6].innerText) || 0;
+        subtotal2 += parseFloat(row.cells[8].innerText) || 0;
+        subtotal3 += parseFloat(row.cells[10].innerText) || 0;
+    });
+
+    const vat = subtotal * 0.15;
+    const total = subtotal + vat;
+
+    const vat2 = subtotal2 * 0.15;
+    const total2 = subtotal2 + vat2;
+
+    const vat3 = subtotal3 * 0.15;
+    const total3 = subtotal3 + vat3;
+
+    document.getElementById('subtotal').innerText = subtotal.toFixed(2);
+    document.getElementById('vat').innerText = vat.toFixed(2);
+    document.getElementById('total').innerText = total.toFixed(2);
+
+    document.getElementById('subtotal2').innerText = subtotal2.toFixed(2);
+    document.getElementById('vat2').innerText = vat2.toFixed(2);
+    document.getElementById('total2').innerText = total2.toFixed(2);
+
+    document.getElementById('subtotal3').innerText = subtotal3.toFixed(2);
+    document.getElementById('vat3').innerText = vat3.toFixed(2);
+    document.getElementById('total3').innerText = total3.toFixed(2);
+
+    saveTableState();
+}
+
+// Download table as Excel
+function downloadExcel() {
+    const table = document.getElementById('comparisonTable');
+    const workbook = XLSX.utils.table_to_book(table);
+    XLSX.writeFile(workbook, 'comparison_table.xlsx');
+}
+
+function downloadExcel() {
+        const table = document.getElementById('comparisonTable');
+        const workbook = XLSX.utils.table_to_book(table);
+        XLSX.writeFile(workbook, 'comparison_table.xlsx');
+    }
+    
+
+
+
+    function downloadPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('l','pt', 'a4');
+        doc.text("Dammam Airport Company (DACO)", 40, 40);
+        doc.text("Supply Chain Department - Commercial Comparison", 40, 60);
+
+        const table = document.getElementById("comparisonTable");
+        const data = [];
+        const rows = table.getElementsByTagName("tr");
+
+        for (let i = 0; i < rows.length; i++) {
+            const row = rows[i];
+            const rowData = [];
+            const cells = row.getElementsByTagName("td");
+
+            for (let j = 0; j < cells.length; j++) {
+                if (cells[j].children.length > 0 && cells[j].children[0].tagName === "SELECT") {
+                    rowData.push(cells[j].children[0].options[cells[j].children[0].selectedIndex].text);
+                } else {
+                    rowData.push(cells[j].innerText);
+                }
+            }
+            data.push(rowData);
+        }
+
+        doc.autoTable({
+            head: [['S.N', 'Services No', 'Description', 'Unit', 'Qty', 'Unit Price', 'Total Price', 'Unit Price', 'Total Price', 'Unit Price', 'Total Price',]],
+            body: data,
+            startY: 80,
+        });
+
+        doc.save('comparison.pdf');
+    }
+
+   
+    function downloadPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('landscape', 'pt', 'a4');
+
+        // Adding header
+        doc.setFontSize(18);
+        doc.text('Dammam Airport Company (DACO)', 40, 40);
+        doc.setFontSize(12);
+        doc.text('Supply Chain Department - Commercial Comparison', 40, 60);
+
+        // Clone the table
+        const table = document.getElementById('comparisonTable').cloneNode(true);
+
+        // Replace dropdowns with selected values in the cloned table
+        const rows = table.querySelectorAll('tbody tr');
+        rows.forEach(row => {
+            row.querySelectorAll('td').forEach(cell => {
+                if (cell.children.length > 0 && cell.children[0].tagName === "SELECT") {
+                    const select = cell.children[0];
+                    const selectedValue = select.value;
+                    cell.innerHTML = selectedValue; // Replace the cell content with the selected value
+                }
+            });
+        });
+
+        // Adding table to the PDF
+        doc.autoTable({
+            html: table,
+            startY: 80,
+            theme: 'grid',
+            styles: { cellPadding: 3, fontSize: 10 },
+            headStyles: { fillColor: [0, 0, 0] },
+            didDrawCell: function (data) {
+                if (data.column.index === 6 || data.column.index === 8 || data.column.index === 10) {
+                    // Highlight the lowest price among the suppliers
+                    const cellValue = parseFloat(data.cell.text[0]) || 0;
+                    const row = data.row.index;
+                    const cell6 = parseFloat(rows[row].cells[6].innerText) || 0;
+                    const cell8 = parseFloat(rows[row].cells[8].innerText) || 0;
+                    const cell10 = parseFloat(rows[row].cells[10].innerText) || 0;
+
+                    const minValue = Math.min(cell6, cell8, cell10);
+
+                    if (cellValue === minValue) {
+                        data.cell.styles.fillColor = [0, 255, 0]; // Highlight the lowest price cells
+                    }
+                }
+            }
+        });
+
+        // Adding comments to the PDF
+        const commentsDiv = document.getElementById('comments');
+        const comments = commentsDiv.querySelectorAll('div');
+        if (comments.length > 0) {
+            doc.setFontSize(14);
+            doc.text('Comments:', 40, doc.lastAutoTable.finalY + 40);
+            doc.setFontSize(12);
+
+            comments.forEach((comment, index) => {
+                const commentText = comment.querySelector('span').innerText;
+                doc.text(`${index + 1}. ${commentText}`, 40, doc.lastAutoTable.finalY + 60 + index * 20);
+            });
+        }
+
+        // Save the generated PDF
+        doc.save('comparison.pdf');
+    }
+    function uploadPDF(event) {
+            const files = event.target.files;
+            const uploadedPdfs = JSON.parse(localStorage.getItem('uploadedPdfs')) || [];
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const pdfContainer = document.createElement('div');
+                    pdfContainer.className = "flex items-center m-2 p-2 border border-gray-300 rounded";
+
+                    // Create the PDF icon
+                    const pdfIcon = document.createElement('img');
+                    pdfIcon.src = "https://img.icons8.com/ios-filled/50/000000/pdf.png"; // PDF icon
+                    pdfIcon.alt = "PDF";
+                    pdfIcon.className = "w-8 h-8 cursor-pointer";
+                    pdfIcon.onclick = function() {
+                        const newTab = window.open();
+                        newTab.document.body.innerHTML = `<iframe src="${e.target.result}" class="w-full h-full" style="height: 100vh;"></iframe>`;
+                    };
+
+                    // Create the remove button
+                    const removeBtn = document.createElement('button');
+                    removeBtn.className = "ml-2 bg-red-500 text-white px-2 py-1 rounded";
+                    removeBtn.innerText = "Remove";
+                    removeBtn.onclick = function() {
+                        pdfContainer.remove();
+                        // Remove from localStorage
+                        const index = uploadedPdfs.indexOf(e.target.result);
+                        if (index !== -1) {
+                            uploadedPdfs.splice(index, 1);
+                            saveUploadedPdfs(uploadedPdfs);
+                        }
+                    };
+
+                    // Append the icon and remove button to the container
+                    pdfContainer.appendChild(pdfIcon);
+                    pdfContainer.appendChild(removeBtn);
+                    document.getElementById('uploadedPdfContainer').appendChild(pdfContainer);
+
+                    uploadedPdfs.push(e.target.result);
+                    saveUploadedPdfs(uploadedPdfs);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function saveUploadedPdfs(pdfs) {
+            localStorage.setItem('uploadedPdfs', JSON.stringify(pdfs));
+        }
+
+        function loadUploadedPdfs() {
+            const uploadedPdfs = JSON.parse(localStorage.getItem('uploadedPdfs'));
+            if (uploadedPdfs) {
+                const container = document.getElementById('uploadedPdfContainer');
+                container.innerHTML = '';
+                uploadedPdfs.forEach(pdf => {
+                    const pdfContainer = document.createElement('div');
+                    pdfContainer.className = "flex items-center m-2 p-2 border border-gray-300 rounded";
+
+                    // Create the PDF icon
+                    const pdfIcon = document.createElement('img');
+                    pdfIcon.src = "https://img.icons8.com/ios-filled/50/000000/pdf.png"; // PDF icon
+                    pdfIcon.alt = "PDF";
+                    pdfIcon.className = "w-8 h-8 cursor-pointer";
+                    pdfIcon.onclick = function() {
+                        const newTab = window.open();
+                        newTab.document.body.innerHTML = `<iframe src="${pdf}" class="w-full h-full" style="height: 100vh;"></iframe>`;
+                    };
+
+                    // Create the remove button
+                    const removeBtn = document.createElement('button');
+                    removeBtn.className = "ml-2 bg-red-500 text-white px-2 py-1 rounded";
+                    removeBtn.innerText = "Remove";
+                    removeBtn.onclick = function() {
+                        pdfContainer.remove();
+                        // Remove from localStorage
+                        const index = uploadedPdfs.indexOf(pdf);
+                        if (index !== -1) {
+                            uploadedPdfs.splice(index, 1);
+                            saveUploadedPdfs(uploadedPdfs);
+                        }
+                    };
+
+                    // Append the icon and remove button to the container
+                    pdfContainer.appendChild(pdfIcon);
+                    pdfContainer.appendChild(removeBtn);
+                    container.appendChild(pdfContainer);
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUploadedPdfs();
+        });
+
+//   Download table data as PDF file
+  
+
+// Submit a comment with edit and delete functionalities
+function submitComment() {
+            const commentInput = document.getElementById('commentInput');
+            const commentText = commentInput.value.trim();
+            if (commentText) {
+                addComment(commentText);
+                commentInput.value = '';
+                saveComments();
+            }
+        }
+
+        function addComment(commentText, load = false) {
+            const commentDiv = document.createElement('div');
+            commentDiv.className = 'bg-gray-100 border border-gray-300 p-2 mb-2 rounded flex justify-between items-center';
+            
+            const commentTextNode = document.createElement('span');
+            commentTextNode.contentEditable = true;
+            commentTextNode.innerText = commentText;
+            commentTextNode.className = 'flex-grow mr-4';
+            commentTextNode.oninput = saveComments; // Save comments on edit
+            
+            const editButton = document.createElement('button');
+            editButton.className = 'bg-yellow-500 text-white px-2 py-1 rounded mr-2';
+            editButton.innerText = 'Edit';
+            editButton.onclick = () => {
+                commentTextNode.focus();
+                document.execCommand('selectAll', false, null);
+            };
+
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'bg-red-500 text-white px-2 py-1 rounded';
+            deleteButton.innerText = 'Delete';
+            deleteButton.onclick = () => {
+                commentDiv.remove();
+                saveComments();
+            };
+            
+            commentDiv.appendChild(commentTextNode);
+            commentDiv.appendChild(editButton);
+            commentDiv.appendChild(deleteButton);
+            
+            document.getElementById('comments').appendChild(commentDiv);
+
+            if (!load) {
+                saveComments();
+            }
+        }
+
+        function saveComments() {
+            const comments = [];
+            document.querySelectorAll('#comments > div').forEach(commentDiv => {
+                const commentText = commentDiv.querySelector('span').innerText;
+                comments.push(commentText);
+            });
+            localStorage.setItem('comments', JSON.stringify(comments));
+        }
+
+        function loadComments() {
+            const savedComments = JSON.parse(localStorage.getItem('comments')) || [];
+            savedComments.forEach(comment => addComment(comment, true));
+        }
+
+        // Load comments on page load
+        document.addEventListener('DOMContentLoaded', loadComments);
+
+    </Script>
+    <body/>
+    <html/>

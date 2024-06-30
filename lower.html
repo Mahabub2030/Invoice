@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice System</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+</head>
+
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+
+        <!-- Header -->
+        <header class="flex flex-col p-4 rounded">
+            <div class="flex items-center justify-between">
+                <h1 class="text-xl font-bold ml-10 underline">Contract No :</h1>
+                <p class="text-gray-600 ml-4">200</p>
+            </div>
+            <div class="flex items-center justify-between">
+                <h1 class="text-xl font-bold ml-10 underline">Ref. Number :</h1>
+                <p class="text-gray-600 ml-4">NBT-24-200-005</p>
+            </div>
+            <div class="flex items-center justify-between">
+                <h1 class="text-xl font-bold ml-10 underline">Date:</h1>
+                <p class="text-gray-600 ml-4">28/06/2024</p>
+            </div>
+        </header>
+
+        <h1 class="text-center font-extrabold text-2xl underline p-5">Purchasing Request</h1>
+
+        <section>
+            <table class="border">
+                <tr class="p-10">
+                    <th class="border px-4 py-2">Title</th>
+                </tr>
+            </table>
+        </section>
+
+        <p class="text-lg underline">Line items Details & Cost</p>
+        <div>
+                <a href="index.html" class="text-blue-500">Back to Main Page</a>
+            </div>
+
+        <!-- Invoice Table -->
+        <div class="bg-white shadow rounded p-10 mb-10 overflow-auto">
+            <table id="invoiceTable" class="min-w-full border-collapse w-full">
+                <thead class="bg-gray-200">
+                    <tr class="p-10">
+                        <th class="border px-4 py-2">S.N</th>
+                        <th class="border px-4 py-2">Item Description</th>
+                        <th class="border px-4 py-2">Stock Number</th>
+                        <th class="border px-4 py-2">UOM</th>
+                        <th class="border px-4 py-2">QTY</th>
+                        <th class="border px-4 py-2">Unit Price</th>
+                        <th class="border px-4 py-2">Total Price</th>
+                        <th class="border px-4 py-2">Delivery Time</th>
+                        <th class="border px-4 py-2">Warehouse Check <br>(Available as Stock<br />or Not Available)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Sample data rows -->
+                    <tr class="font-bold">
+                        <td class="border px-4 py-2 text-center" contenteditable="true">1</td>
+                        <td class="border px-4 py-2 text-center" contenteditable="true">N/A</td>
+                        <td class="border px-4 py-2 text-center" contenteditable="true">N/A</td>
+                        <td class="border px-4 py-2 text-center" contenteditable="true">0.00</td>
+                        <td class="border px-4 py-2 text-center" contenteditable="true">0.00</td>
+                        <td class="border px-4 py-2 text-center" contenteditable="true">0.00</td>
+                        <td class="border px-4 py-2 text-center" contenteditable="true">0.00</td>
+                        <td class="border px-4 py-2 text-center" contenteditable="true">60</td>
+                        <td class="border px-4 py-2 text-center">
+                            <select>
+                                <option value="AV">AV</option>
+                                <option value="N/A">N/A</option>
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot class="border-s-indigo-500">
+                    <tr class="font-bold">
+                        <td class="border px-4 text-center" colspan="6">Gross Amount</td>
+                        <td class="border px-4 text-center" colspan="" id="grossAmount">0.00</td>
+                    </tr>
+                    <tr class="font-bold">
+                        <td class="border px-4 text-center" colspan="6">Discount (10%)</td>
+                        <td class="border px-4 text-center" colspan="" id="discount">0.00</td>
+                    </tr>
+                    <tr class="font-bold">
+                        <td class="border px-4 text-center" colspan="6">Add (500SR)</td>
+                        <td class="border px-4 text-center" colspan="" id="additional">0.00</td>
+                    </tr>
+                    <tr class="font-bold">
+                        <td class="border px-4 text-center" colspan="6">Margin (3%)</td>
+                        <td class="border px-4 text-center" colspan="" id="margin">0.00</td>
+                    </tr>
+                    <tr class="font-bold">
+                        <td class="border px-4 text-center" colspan="6">VAT 15%</td>
+                        <td class="border px-4 text-center" colspan="" id="vat">0.00</td>
+                    </tr>
+                    <tr class="font-bold">
+                        <td class="border px-4 text-center" colspan="6">Net Amount</td>
+                        <td class="border px-4 text-center" colspan="" id="netAmount">0.00</td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <div class="flex justify-end mb-4">
+                <button class="bg-blue-500 text-white px-4 py-2 rounded mr-2" onclick="addRow()">Add Row</button>
+                <button class="bg-red-500 text-white px-4 py-2 rounded mr-2" onclick="removeAllRows()">Remove All Rows</button>
+                <button class="bg-green-500 text-white px-4 py-2 rounded mr-2" onclick="downloadExcel()">Download as Excel</button>
+                <button class="bg-purple-500 text-white px-4 py-2 rounded mr-2" onclick="downloadPDF()">Download as PDF</button>
+            </div>
+            <div>
+                <a href="index.html" class="text-blue-500">Back to Main Page</a>
+            </div>
+           
+        </div>
+
+        <h1 class="text-xl font-extrabold underline">Budget Information <span>: (DACO USE)</span></h1>
+        <section>
+            <div class="rounded p-10 mb-10 overflow-auto">
+                <table class="min-w-full border-collapse w-full">
+                    <tfoot class="border-s-indigo-500">
+                        <tr class="font-bold">
+                            <td class="border px-4" contenteditable="true" colspan="6">Cost Center</td>
+                            <td class="border px-4 text-center"></td>
+                        </tr>
+                        <tr class="font-bold">
+                            <td class="border px-4" contenteditable="true" colspan="6">Main Account Number</td>
+                            <td class="border px-4 text-center"></td>
+                        </tr>
+                        <tr class="font-bold">
+                            <td class="border px-4" contenteditable="true" colspan="6">Prepared By</td>
+                            <td class="border px-4 text-center"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </section>
+        <h1 class="text-xl font-extrabold underline mb-5">Reviews and Approvals <span>: (DACO USE)</span></h1>
+        <section class="">
+            <div class="bg-white shadow rounded p-10 mb-10 mt-9">
+                <div class="flex justify-between border p-10">
+                    <p class="font-bold">Technical Approval</p>
+                    <p class="font-bold">Warehouse Approval (for Materials Request)</p>
+                </div>
+                <div class="border bg-black-200 p-10">
+                    <div class="flex justify-between mx-8 mt-4 font-bold">
+                        <p>Department Manager</p>
+                        <p>Warehouse Manager</p>
+                    </div>
+                    <div class="flex justify-between mx-8">
+                        <p>Name :</p>
+                        <p>Date & Signature</p>
+                    </div>
+                    <p class="ml-9 mt-1">Date & Signature</p>
+                    <div class="flex justify-between mx-8 mt-16">
+                        <p class="font-bold">Asset & Facility Management General Manager</p>
+                        <p class="text-black-300 bg-gray-200 font-bold p-4 rounded-md w-1/2 text-center">Procurement Approval</p>
+                    </div>
+                    <div class="flex justify-between mx-8">
+                        <p>Name : Eng. Bader A Al Zahrani</p>
+                        <p>Tendering, Procurement & Contracts General Manager</p>
+                    </div>
+                    <div class="flex justify-between mx-16">
+                        <p>Date & Signature</p>
+                        <p>Date & Signature</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <p>Attachments :</p>
+            <ul>
+                <li>Commercial Comparison Sheet</li>
+                <li>Three Quotation</li>
+                <li>Additional Supporting Docs (if Any)</li>
+            </ul>
+        </section>
+
+        <p>......................................................................................</p>
+
+        <!-- Uploaded PDF Section -->
+        <div id="uploadedPdfContainer" class="flex flex-wrap mb-4"></div>
+
+        <!-- Comments Section -->
+        <div class="bg-white shadow rounded p-4 mt-4">
+            <a href="index.html" class="text-blue-500">Back To Main</a>
+        </div>
+    </div>
+
+    <!-- Script -->
+    <script>
+        const { jsPDF } = window.jspdf;
+
+        function addRow() {
+            const table = document.getElementById('invoiceTable').getElementsByTagName('tbody')[0];
+            const row = table.insertRow();
+            for (let i = 0; i < 9; i++) {
+                const cell = row.insertCell(i);
+                if (i === 8) {
+                    const select = document.createElement('select');
+                    select.innerHTML = '<option value="AV">AV</option><option value="N/A">N/A</option>';
+                    cell.appendChild(select);
+                } else {
+                    cell.contentEditable = true;
+                    cell.innerText = 'N/A';
+                }
+            }
+        }
+
+        function removeAllRows() {
+            const table = document.getElementById('invoiceTable').getElementsByTagName('tbody')[0];
+            table.innerHTML = '';
+        }
+
+        function downloadPDF() {
+            const pdf = new jsPDF('p', 'mm', 'a3');
+            const table = document.getElementById('invoiceTable');
+            pdf.autoTable({
+                html: table,
+                startY: 10,
+                styles: { fontSize: 10 },
+                theme: 'grid',
+                didDrawPage: (data) => {
+                    pdf.text('Purchasing Request', data.settings.margin.left, 10);
+                }
+            });
+            pdf.save('invoice.pdf');
+        }
+
+        function downloadExcel() {
+            const table = document.getElementById('invoiceTable');
+            const workbook = XLSX.utils.table_to_book(table, { sheet: "Sheet JS" });
+            XLSX.writeFile(workbook, 'invoice.xlsx');
+        }
+
+        function uploadPDF(event) {
+            const files = event.target.files;
+            const container = document.getElementById('uploadedPdfContainer');
+            container.innerHTML = ''; // Clear previous uploads
+
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const iframe = document.createElement('iframe');
+                    iframe.src = e.target.result;
+                    iframe.className = 'w-full h-64 mb-4 border';
+                    container.appendChild(iframe);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function saveHistory() {
+            // Implement the function to save the current state if needed
+            alert("History saved (this is a placeholder function).");
+        }
+    </script>
+</body>
+
+</html>
