@@ -48,13 +48,7 @@
         <div class="bg-white shadow rounded p-4 mb-4">
             <table id="comparisonTable" class="min-w-full border-collapse w-full">
                 <thead class="bg-gray-200">
-                    <!-- <tr>
-                        <th class="border px-4 py-2" colspan="5"></th>
-                        <th contenteditable="true"class="border px-4 py-2" colspan="2">AL Yaseen Agricultar</th>
-                        <th  contenteditable="true" class="border px-4 py-2" colspan="2">Al Taleb Group</th>
-                        <th  contenteditable="true" class="border px-4 py-2" colspan="2">Alam Albiad</th>
-                        <th  contenteditable="true" class="border px-4 py-2"></th>
-                    </tr> -->
+             
 
                     <tr>
                         <th class="border px-4 py-2" colspan="5"></th>
@@ -242,47 +236,6 @@ function loadTableState() {
     }
 }
 
-// Add a new row to the table
-// Add a new row to the table
-// function addRow(updateTotalsFlag = true) {
-//         const row = document.createElement('tr');
-//         row.innerHTML = `
-//             <td class="border px-4 py-2">${document.querySelectorAll('#comparisonTable tbody tr').length + 1}</td>
-//             <td class="border px-4 py-2">
-//                 <select class="w-full" onchange="saveTableState()">
-    
-//                     <option value="B-Nine plant growth reg. SWG 1KG">6840l352683</option>
-//                     <option value="B-Nine plant growth reg. SWG 1KG">6840L413853</option>
-//                     <option value="B-Nine plant growth reg. SWG 1KG">B-Nine plant growth reg. SWG 1KG">8720L107601</option>
-//                     <option value="8720L107602">8720L107602</option>
-    
-    
-//                 </select>
-//             </td>
-//             <td class="border px-4 py-2">
-//                 <select class="w-full" onchange="saveTableState()">
-    
-//                     <option value="6840l352683">B-Nine plant growth reg. SWG 1KG</option>
-//                     <option value="6840L413853">B-Nine plant growth reg. SWG 1KG</option>
-//                     <option value="8720L107601">B-Nine plant growth reg. SWG 1KG</option>
-
-
-//                 </select>
-//             </td>
-//             <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">IT</td>
-//             <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">0</td>
-//             <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">0</td>
-//             <td class="border px-4 py-2 total-price">0.00</td>
-//             <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">0</td>
-//             <td class="border px-4 py-2 total-price">0.00</td>
-//             <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">0</td>
-//             <td class="border px-4 py-2 total-price">0.00</td>
-//             <td class="border px-4 py-2"><button class="text-red-500" onclick="removeRow(this)">Remove</button></td>
-//         `;
-//         document.querySelector('#comparisonTable tbody').appendChild(row);
-//         if (updateTotalsFlag) updateTotals();
-//     }
-
  // Function to save supplier names to localStorage
  function saveSupplierNames() {
             const supplier1 = document.getElementById('supplier1').value;
@@ -330,101 +283,6 @@ function loadTableState() {
             localStorage.setItem('tableData', JSON.stringify(tableData));
         }
 
-        // Function to load the table state from localStorage
-        // function loadTableState() {
-        //     const tableData = JSON.parse(localStorage.getItem('tableData') || '[]');
-        //     const tbody = document.querySelector('#comparisonTable tbody');
-        //     tbody.innerHTML = ''; // Clear existing rows
-        //     tableData.forEach((rowData, rowIndex) => {
-        //         const row = document.createElement('tr');
-        //         row.innerHTML = `
-        //             <td class="border px-4 py-2">${rowIndex + 1}</td>
-        //             <td class="border px-4 py-2">
-        //                 <select class="w-full" onchange="saveTableState()">
-        //                     <option value="6840l352683" ${rowData[1] === '6840l352683' ? 'selected' : ''}>6840l352683</option>
-        //                     <option value="6840L413853" ${rowData[1] === '6840L413853' ? 'selected' : ''}>6840L413853</option>
-        //                     <option value="8720L107601" ${rowData[1] === '8720L107601' ? 'selected' : ''}>8720L107601</option>
-        //                     <option value="8720L107602" ${rowData[1] === '8720L107602' ? 'selected' : ''}>8720L107602</option>
-        //                 </select>
-        //             </td>
-        //             <td class="border px-4 py-2">
-        //                 <select class="w-full" onchange="saveTableState()">
-        //                     <option value="B-Nine plant growth reg. SWG 1KG" ${rowData[2] === 'B-Nine plant growth reg. SWG 1KG' ? 'selected' : ''}>B-Nine plant growth reg. SWG 1KG</option>
-        //                     <option value="B-Nine plant growth reg. SWG 1KG" ${rowData[2] === 'B-Nine plant growth reg. SWG 1KG' ? 'selected' : ''}>B-Nine plant growth reg. SWG 1KG</option>
-        //                     <option value="B-Nine plant growth reg. SWG 1KG" ${rowData[2] === 'B-Nine plant growth reg. SWG 1KG' ? 'selected' : ''}>B-Nine plant growth reg. SWG 1KG</option>
-        //                 </select>
-        //             </td>
-        //             <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">${rowData[3] || ''}</td>
-        //             <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">${rowData[4] || '0'}</td>
-        //             <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">${rowData[5] || '0'}</td>
-        //             <td class="border px-4 py-2 total-price">${rowData[6] || '0.00'}</td>
-        //             <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">${rowData[7] || '0'}</td>
-        //             <td class="border px-4 py-2 total-price">${rowData[8] || '0.00'}</td>
-        //             <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">${rowData[9] || '0'}</td>
-        //             <td class="border px-4 py-2 total-price">${rowData[10] || '0.00'}</td>
-        //             <td class="border px-4 py-2"><button class="text-red-500" onclick="removeRow(this)">Remove</button></td>
-        //         `;
-        //         tbody.appendChild(row);
-        //     });
-        // }
-
-        // // Function to add a new row to the table
-        // function addRow(updateTotalsFlag = true) {
-        //     const row = document.createElement('tr');
-        //     row.innerHTML = `
-        //         <td class="border px-4 py-2">${document.querySelectorAll('#comparisonTable tbody tr').length + 1}</td>
-        //         <td class="border px-4 py-2">
-        //             <select class="w-full" onchange="saveTableState()">
-        //                 <option value="6840l352683">6840l352683</option>
-        //                 <option value="6840L413853">6840L413853</option>
-        //                 <option value="8720L107601">8720L107601</option>
-        //                 <option value="8720L107602">8720L107602</option>
-        //             </select>
-        //         </td>
-        //         <td class="border px-4 py-2">
-        //             <select class="w-full" onchange="saveTableState()">
-        //                 <option value="B-Nine plant growth reg. SWG 1KG">B-Nine plant growth reg. SWG 1KG</option>
-        //                 <option value="B-Nine plant growth reg. SWG 1KG">B-Nine plant growth reg. SWG 1KG</option>
-        //                 <option value="B-Nine plant growth reg. SWG 1KG">B-Nine plant growth reg. SWG 1KG</option>
-        //             </select>
-        //         </td>
-        //         <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">IT</td>
-        //         <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">0</td>
-        //         <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">0</td>
-        //         <td class="border px-4 py-2 total-price">0.00</td>
-        //         <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">0</td>
-        //         <td class="border px-4 py-2 total-price">0.00</td>
-        //         <td class="border px-4 py-2" contenteditable="true" oninput="updateRow(this)">0</td>
-        //         <td class="border px-4 py-2 total-price">0.00</td>
-        //         <td class="border px-4 py-2"><button class="text-red-500" onclick="removeRow(this)">Remove</button></td>
-        //     `;
-        //     document.querySelector('#comparisonTable tbody').appendChild(row);
-        //     if (updateTotalsFlag) updateTotals();
-        //     saveTableState(); // Save state after adding a row
-        // }
-
-        // // Function to update row (triggered on input change)
-        // function updateRow(cell) {
-        //     saveTableState(); // Save state whenever a cell is updated
-        // }
-
-        // // Function to remove a row from the table
-        // function removeRow(button) {
-        //     button.closest('tr').remove();
-        //     saveTableState(); // Save state after removing a row
-        //     updateTotals(); // Recalculate totals after row removal
-        // }
-
-        // // Function to calculate totals (not fully implemented in the provided code)
-        // function updateTotals() {
-        //     // Add your logic to update totals here if required
-        // }
-
-        // // Load supplier names and table state on page load
-        // window.onload = () => {
-        //     loadSupplierNames();
-        //     loadTableState();
-        // };
 
         function loadTableState() {
             const tableData = JSON.parse(localStorage.getItem('tableData') || '[]');
