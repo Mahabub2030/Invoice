@@ -78,21 +78,21 @@
                 <tfoot class="bg-gray-200">
                     <tr class="font-bold">
                         <td class="border px-4 py-2" colspan="6">Subtotal</td>
-                        <td class="border px-4 py-2" id="subtotal">0.00</td>
+                        <td class="border px-4 py-2" colspan="2" id="subtotal">0.00</td>
                         <td class="border px-4 py-2" colspan="2" id="subtotal2">0.00</td>
                         <td class="border px-4 py-2" colspan="2" id="subtotal3">0.00</td>
                     </tr>
                     
                     <tr class="font-bold">
                         <td class="border px-4 py-2" colspan="6">VAT (15%)</td>
-                        <td class="border px-4 py-2" id="vat">0.00</td>
+                        <td class="border px-4 py-2" colspan="2" id="vat">0.00</td>
                         <td class="border px-4 py-2" colspan="2" id="vat2">0.00</td>
                         <td class="border px-4 py-2" colspan="2" id="vat3">0.00</td>
                     </tr>
 
                     <tr class="font-bold">
                         <td class="border px-4 py-2" colspan="6">Total (with VAT)</td>
-                        <td class="border px-4 py-2" id="total">0.00</td>
+                        <td class="border px-4 py-2" colspan="2" id="total">0.00</td>
                         <td class="border px-4 py-2" colspan="2" id="total2">0.00</td>
                         <td class="border px-4 py-2" colspan="2" id="total3">0.00</td>
                     </tr>
@@ -102,7 +102,7 @@
 
         <!-- Buttons for actions -->
         <div class="flex justify-end mb-4">
-            <button class="   bg-indigo-500  px-4 py-2 rounded mr-2 text-white hover:bg-slate-900"> <a href="./lower.html">Check_Lowprice</a></button>
+            <button class="   bg-indigo-500  px-4 py-2 rounded mr-2 text-white hover:bg-slate-900"> <a href="./1.html">Check_Lowprice</a></button>
             <button class="   bg-indigo-500  px-4 py-2 rounded mr-2 text-white hover:bg-slate-900"> <a href="./history.html">History</a></button>
             <button class="bg-blue-500 text-white px-4 py-2 rounded mr-2 " onclick="addRow()">Add Row</button>
             <button class="bg-red-500 text-white px-4 py-2 rounded mr-2" onclick="removeAllRows()">Remove All Rows</button>
@@ -128,39 +128,6 @@
     </div>
    
     <Script>
-
-        //  // Save supplier names to localStorage
-        //  function saveSupplierNames() {
-        //     const supplier1 = document.getElementById('supplier1').value;
-        //     const supplier2 = document.getElementById('supplier2').value;
-        //     const supplier3 = document.getElementById('supplier3').value;
-
-        //     localStorage.setItem('supplier1', supplier1);
-        //     localStorage.setItem('supplier2', supplier2);
-        //     localStorage.setItem('supplier3', supplier3);
-
-        //     document.getElementById('supplierHeader1').innerText = supplier1 || "AL Yaseen Agricultar";
-        //     document.getElementById('supplierHeader2').innerText = supplier2 || "Al Taleb Group";
-        //     document.getElementById('supplierHeader3').innerText = supplier3 || "Alam Albiad";
-        // }
-
-        // // Load supplier names from localStorage
-        // function loadSupplierNames() {
-        //     const supplier1 = localStorage.getItem('supplier1') || "AL Yaseen Agricultar";
-        //     const supplier2 = localStorage.getItem('supplier2') || "Al Taleb Group";
-        //     const supplier3 = localStorage.getItem('supplier3') || "Alam Albiad";
-
-        //     document.getElementById('supplier1').value = supplier1;
-        //     document.getElementById('supplier2').value = supplier2;
-        //     document.getElementById('supplier3').value = supplier3;
-
-        //     document.getElementById('supplierHeader1').innerText = supplier1;
-        //     document.getElementById('supplierHeader2').innerText = supplier2;
-        //     document.getElementById('supplierHeader3').innerText = supplier3;
-        // }
-
-        // // Load supplier names on page load
-        // window.onload = loadSupplierNames;
 
          // Save supplier names to localStorage
          function saveSupplierNames() {
