@@ -11,7 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gray-100 font-serif">
     <div class="container mx-auto p-4">
        
         <header class="flex justify-between items-center bg-white shadow p-4 rounded mb-4">
@@ -68,7 +68,6 @@
                         <td class="border px-4 py-2" colspan="2" id="subtotal2">0.00</td>
                         <td class="border px-4 py-2" colspan="2" id="subtotal3">0.00</td>
                     </tr>
-                    
                     <tr class="font-bold">
                         <td class="border px-4 py-2" colspan="6">VAT (15%)</td>
                         <td class="border px-4 py-2" colspan="2" id="vat">0.00</td>
@@ -313,6 +312,23 @@ function loadTableState() {
                         <option value="6840L413853">6840L413853</option>
                         <option value="8720L107601">8720L107601</option>
                         <option value="8720L107602">8720L107602</option>
+                        <option value="8720L158245">8720L158245</option>
+                        <option value="8720L158736">8720L158736</option>
+                        <option value="8720L267035">8720L267035</option>
+                        <option value="8720L281984">8720L281984</option>
+                        <option value="8720l298434">8720l298434</option>
+                        <option value="8720L298533">8720L298533</option>
+                        <option value="8720L298566">8720L298566</option>
+                        <option value="8720L298567">8720L298567</option>
+                        <option value="8720L298568">8720L298568</option>
+                        <option value="8720L298570">8720L298570</option>
+                        <option value="8720L352423">8720L352423</option>
+                        <option value="8720L355889">8720L355889</option>
+                        <option value="8720L355904">8720L355904</option>
+                        <option value="8720L360048">8720L360048</option>
+                        <option value="8720L368838">8720L368838</option>
+                        <option value="8720L384282">8720L384282</option>
+                        <option value="8720L392458">8720L392458</option>
                     </select>
                 </td>
                 <td class="border px-4 py-2">
@@ -347,6 +363,24 @@ function loadTableState() {
             '8720L107615': ['ZINC CHELATE 12%'],
             '8720L125863': ['CALCIUM NITRATE 100LB/BG'],
             '8720L158238': ['Osmocote 14-14-14 50LB/BG'],
+            '8720L158245': ['Peters 20-10-20'],
+            '8720L158736': ['Soil vermiculite conditioner 85L'],
+            '8720L267035': ['Albustan organic 25 KG'],
+            '8720L281984': ['Soil perlite crum condr. 4cuft/bag'],
+            '8720l298434': ['Peat-lite special'],
+            '8720L298533': ['Soil orchid conditioner'],
+            '8720L298566': ['Osmocote 13-13-13'],
+            '8720L298567': ['Osmocote 17-7-12'],
+            '8720L298568': ['Super PO4 triple 0-46-0 50LB/BG'],
+            '8720L298570': ['Urea formaldehyde 38-0-0'],
+            '8720L352420': ['DAP 25-53-0 100LB/BG'],
+            '8720L352423': ['MANGANESE CHELATE 13%'],
+            '8720L355889': ['IRON CHELATE 13.2%'],
+            '8720L355904': ['ZINC CHELATE 15%'],
+            '8720L360048': ['Potassium NO3 13-0-44'],
+            '8720L368838': ['Urea 46-0-0'],
+            '8720L384282': ['Potassium nitrate 13-0-45+Te1.2%'],
+            '8720L392458': ['COPPER CHELATE 14%'],
         };
 
         // Load supplier names and table state on page load
@@ -433,11 +467,7 @@ function downloadExcel() {
         const table = document.getElementById('comparisonTable');
         const workbook = XLSX.utils.table_to_book(table);
         XLSX.writeFile(workbook, 'comparison_table.xlsx');
-    }
-    
-
-
-
+    }   
     function downloadPDF() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF('l','pt', 'a4');
