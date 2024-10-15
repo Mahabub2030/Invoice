@@ -30,13 +30,13 @@
                     </tr>
                 </thead>
                 <tbody id="historyBody">
-                    <!-- History entries will be dynamically added here -->
+                    <!-- History rows will be inserted here -->
                 </tbody>
             </table>
         </div>
     </div>
 
-    <script>
+    <!-- <script>
         function loadHistory() {
             const historyBody = document.getElementById("historyBody");
             historyBody.innerHTML = "";
@@ -55,6 +55,57 @@
         }
 
         document.addEventListener("DOMContentLoaded", loadHistory);
+    </script> -->
+    <script>
+   // Function to load invoice history and display totals
+   function loadHistory() {
+        const historyBody = document.getElementById("historyBody");
+        historyBody.innerHTML = "";  // Clear the table
+
+        // Retrieve the history from localStorage
+        const history = JSON.parse(localStorage.getItem("invoiceHistory") || "[]");
+
+        // Display each entry from the history
+        history.forEach(entry => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td class="border px-4 py-2">${entry.date}</td>
+                <td class="border px-4 py-2">${entry.subtotal}</td>
+                <td class="border px-4 py-2">${entry.vat}</td>
+                <td class="border px-4 py-2">${entry.total1}</td>
+                <td class="border px-4 py-2">${entry.total2}</td>
+                <td class="border px-4 py-2">${entry.total3}</td>
+            `;
+            historyBody.appendChild(row);
+        });
+
+        // Retrieve and display the totals for all three suppliers from localStorage
+        const total1 = localStorage.getItem("total1") || "0.00";
+        const total2 = localStorage.getItem("total2") || "0.00";
+        const total3 = localStorage.getItem("total3") || "0.00";
+
+        document.getElementById("total1").textContent = total1;
+        document.getElementById("total2").textContent = total2;
+        document.getElementById("total3").textContent = total3;
+    }
+
+    // Ensure the function runs once the page is loaded
+    document.addEventListener("DOMContentLoaded", loadHistory);
+
+    // Example function to save history data (call this when you save invoices)
+    function saveHistory(entry) {
+        const history = JSON.parse(localStorage.getItem("invoiceHistory") || "[]");
+        history.push(entry);
+        localStorage.setItem("invoiceHistory", JSON.stringify(history));
+
+        // Save the totals for each supplier
+        localStorage.setItem("total1", entry.total1);
+        localStorage.setItem("total2", entry.total2);
+        localStorage.setItem("total3", entry.total3);
+    }
+
+   
     </script>
+    
 </body>
 </html>
