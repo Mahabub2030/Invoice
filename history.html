@@ -3,109 +3,422 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>History - DACO Invoice System</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>History - Dammam Airport Company (DACO)</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-100 font-serif">
     <div class="container mx-auto p-4">
-        <!-- Header -->
-        <header class="flex justify-between items-center bg-white shadow p-4 rounded mb-4">
-            <div>
-                <h1 class="text-2xl font-bold">Invoice History</h1>
-            </div>
-            <div>
-                <a href="index.html" class="text-blue-500">Back to Main Page</a>
-            </div>
+        <header class="bg-white shadow p-4 rounded mb-4">
+            <h1 class="text-2xl font-bold">History of Invoice Comparisons</h1>
         </header>
-
-        <!-- History Table -->
         <div class="bg-white shadow rounded p-4">
             <table id="historyTable" class="min-w-full border-collapse w-full">
                 <thead class="bg-gray-200">
                     <tr>
                         <th class="border px-4 py-2">Date</th>
-                        <th class="border px-4 py-2">Subtotal</th>
-                        <th class="border px-4 py-2">VAT</th>
-                        <th class="border px-4 py-2">Total</th>
+                        <th class="border px-4 py-2">Supplier 1</th>
+                        <th class="border px-4 py-2">Supplier 2</th>
+                        <th class="border px-4 py-2">Supplier 3</th>
+                        <th class="border px-4 py-2">Lowest Supplier</th>
+                        <th class="border px-4 py-2">Total Amount</th>
                     </tr>
                 </thead>
                 <tbody id="historyBody">
-                    <!-- History rows will be inserted here -->
+                    <!-- History entries will be populated here -->
                 </tbody>
             </table>
         </div>
     </div>
 
-    <!-- <script>
+    <script>
+        // Load history from localStorage
         function loadHistory() {
+            const historyData = JSON.parse(localStorage.getItem("invoiceHistory")) || [];
             const historyBody = document.getElementById("historyBody");
-            historyBody.innerHTML = "";
-            const history = JSON.parse(localStorage.getItem("invoiceHistory") || "[]");
+            historyBody.innerHTML = ""; // Clear existing entries
 
-            history.forEach(entry => {
+            historyData.forEach(entry => {
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <td class="border px-4 py-2">${entry.date}</td>
-                    <td class="border px-4 py-2">${entry.subtotal}</td>
-                    <td class="border px-4 py-2">${entry.vat}</td>
-                    <td class="border px-4 py-2">${entry.total}</td>
+                    <td class="border px-4 py-2">${entry.supplier1}</td>
+                    <td class="border px-4 py-2">${entry.supplier2}</td>
+                    <td class="border px-4 py-2">${entry.supplier3}</td>
+                    <td class="border px-4 py-2">${entry.lowestSupplier}</td>
+                    <td class="border px-4 py-2">${entry.totalAmount}</td>
                 `;
                 historyBody.appendChild(row);
             });
         }
 
-        document.addEventListener("DOMContentLoaded", loadHistory);
-    </script> -->
-    <script>
-   // Function to load invoice history and display totals
-   function loadHistory() {
-        const historyBody = document.getElementById("historyBody");
-        historyBody.innerHTML = "";  // Clear the table
+        window.onload = loadHistory;
+        // Function to clear history from localStorage
+function clearHistory() {
+    localStorage.removeItem("invoiceHistory");
+    loadHistory(); // Reload the history to reflect changes
+}
 
-        // Retrieve the history from localStorage
-        const history = JSON.parse(localStorage.getItem("invoiceHistory") || "[]");
+// Add an event listener to a button for clearing history
+document.getElementById("clearHistoryButton").addEventListener("click", clearHistory);
+``` ```javascript
+// Function to add a new entry to the history
+function addHistoryEntry(entry) {
+    const historyData = JSON.parse(localStorage.getItem("invoiceHistory")) || [];
+    historyData.push(entry);
+    localStorage.setItem("invoiceHistory", JSON.stringify(historyData));
+    loadHistory(); // Reload the history to show the new entry
+}
 
-        // Display each entry from the history
-        history.forEach(entry => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td class="border px-4 py-2">${entry.date}</td>
-                <td class="border px-4 py-2">${entry.subtotal}</td>
-                <td class="border px-4 py-2">${entry.vat}</td>
-                <td class="border px-4 py-2">${entry.total1}</td>
-                <td class="border px-4 py-2">${entry.total2}</td>
-                <td class="border px-4 py-2">${entry.total3}</td>
-            `;
-            historyBody.appendChild(row);
+// Example usage of adding a new entry
+const newEntry = {
+    date: "2023-10-01",
+    supplier1: "Supplier A",
+    supplier2: "Supplier B",
+    supplier3: "Supplier C",
+    lowestSupplier: "Supplier A",
+    totalAmount: 1500
+};
+addHistoryEntry(newEntry);
+``` ```javascript
+// Function to filter history entries by date
+function filterHistoryByDate(startDate, endDate) {
+    const historyData = JSON.parse(localStorage.getItem("invoiceHistory")) || [];
+    const filteredData = historyData.filter(entry => {
+        const entryDate = new Date(entry.date);
+        return entryDate >= new Date(startDate) && entryDate <= new Date(endDate);
+    });
+    const historyBody = document.getElementById("historyBody");
+    historyBody.innerHTML = ""; // Clear existing entries
+
+    filteredData.forEach(entry => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td class="border px-4 py-2">${entry.date}</td>
+            <td class="border px-4 py-2">${entry.supplier1}</td>
+            <td class="border px-4 py-2">${entry.supplier2}</td>
+            <td class="border px-4 py-2">${entry.supplier3}</td>
+            <td class="border px-4 py-2">${entry.lowestSupplier}</td>
+            <td class="border px-4 py-2">${entry.totalAmount}</td>
+        `;
+        historyBody.appendChild(row);
+    });
+}
+
+// Example usage of filtering history
+filterHistoryByDate("2023-10-01", "2023-10-31");
+``` ```javascript
+// Function to sort history entries by total amount
+function sortHistoryByAmount() {
+    const historyData = JSON.parse(localStorage.getItem("invoiceHistory")) || [];
+    const sortedData = historyData.sort((a, b) => a.totalAmount - b.totalAmount);
+    const historyBody = document.getElementById("historyBody");
+    historyBody.innerHTML = ""; // Clear existing entries
+
+    sortedData.forEach(entry => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td class="border px-4 py-2">${entry.date}</td>
+            <td class="border px-4 py-2">${entry.supplier1}</td>
+            <td class="border px-4 py-2">${entry.supplier2}</td>
+            <td class="border px-4 py-2">${entry.supplier3}</td>
+            <td class="border px-4 py-2">${entry.lowestSupplier}</td>
+            <td class="border px-4 py-2">${entry.totalAmount}</td>
+        `;
+        historyBody.appendChild(row);
+    });
+}
+
+// Add an event listener to a button for sorting history
+document.getElementById("sortHistoryButton").addEventListener("click", sortHistoryByAmount);
+``` ```javascript
+// Function to search history entries by supplier name
+function searchHistoryBySupplier(supplierName) {
+    const historyData = JSON.parse(localStorage.getItem("invoiceHistory")) || [];
+    const filteredData = historyData.filter(entry => 
+        entry.supplier1.includes(supplierName) || 
+        entry.supplier2.includes(supplierName) || 
+        entry.supplier3.includes(supplierName)
+    );
+    const historyBody = document.getElementById("historyBody");
+    historyBody.innerHTML = ""; // Clear existing entries
+
+    filteredData.forEach(entry => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td class="border px-4 py-2">${entry.date}</td>
+            <td class="border px-4 py-2">${entry.supplier1}</td>
+            <td class="border px-4 py-2">${entry.supplier2}</td>
+            <td class="border px-4 py-2">${entry.supplier3}</td>
+            <td class="border px-4 py-2">${entry.lowestSupplier}</td>
+            <td class="border px-4 py-2">${entry.totalAmount}</td>
+        `;
+        historyBody.appendChild(row);
+    });
+}
+
+// Add an event listener to a button for searching history
+document.getElementById("searchHistoryButton").addEventListener("click", () => {
+    const supplierName = document.getElementById("supplierSearchInput").value;
+    searchHistoryBySupplier(supplierName);
+});
+``` ```javascript
+// Function to export history entries as a CSV file
+function exportHistoryToCSV() {
+    const historyData = JSON.parse(localStorage.getItem("invoiceHistory")) || [];
+    const csvRows = [];
+    const headers = ["Date", "Supplier 1", "Supplier 2", "Supplier 3", "Lowest Supplier", "Total Amount"];
+    csvRows.push(headers.join(','));
+
+    historyData.forEach(entry => {
+        const row = [
+            entry.date,
+            entry.supplier1,
+            entry.supplier2,
+            entry.supplier3,
+            entry.lowestSupplier,
+            entry.totalAmount
+        ];
+        csvRows.push(row.join(','));
+    });
+
+    const csvString = csvRows.join('\n');
+    const blob = new Blob([csvString], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.setAttribute('href', url);
+    a.setAttribute('download', 'invoice_history.csv');
+    a.click();
+}
+
+// Add an event listener to a button for exporting history
+document.getElementById("exportHistoryButton").addEventListener("click", exportHistoryToCSV);
+``` ```javascript
+// Function to import history entries from a CSV file
+function importHistoryFromCSV(file) {
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        const csvData = event.target.result;
+        const rows = csvData.split('\n').slice(1); // Skip header row
+        const historyData = JSON.parse(localStorage.getItem("invoiceHistory")) || [];
+
+        rows.forEach(row => {
+            const columns = row.split(',');
+            if (columns.length === 6) {
+                const entry = {
+                    date: columns[0],
+                    supplier1: columns[1],
+                    supplier2: columns[2],
+                    supplier3: columns[3],
+                    lowestSupplier: columns[4],
+                    totalAmount: parseFloat(columns[5])
+                };
+                historyData.push(entry);
+            }
         });
 
-        // Retrieve and display the totals for all three suppliers from localStorage
-        const total1 = localStorage.getItem("total1") || "0.00";
-        const total2 = localStorage.getItem("total2") || "0.00";
-        const total3 = localStorage.getItem("total3") || "0.00";
+        localStorage.setItem("invoiceHistory", JSON.stringify(historyData));
+        loadHistory(); // Reload the history to show the imported entries
+    };
+    reader.readAsText(file);
+}
 
-        document.getElementById("total1").textContent = total1;
-        document.getElementById("total2").textContent = total2;
-        document.getElementById("total3").textContent = total3;
+// Add an event listener to a file input for importing history
+document.getElementById("importHistoryInput").addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        importHistoryFromCSV(file);
     }
-
-    // Ensure the function runs once the page is loaded
-    document.addEventListener("DOMContentLoaded", loadHistory);
-
-    // Example function to save history data (call this when you save invoices)
-    function saveHistory(entry) {
-        const history = JSON.parse(localStorage.getItem("invoiceHistory") || "[]");
-        history.push(entry);
-        localStorage.setItem("invoiceHistory", JSON.stringify(history));
-
-        // Save the totals for each supplier
-        localStorage.setItem("total1", entry.total1);
-        localStorage.setItem("total2", entry.total2);
-        localStorage.setItem("total3", entry.total3);
+});
+``` ```javascript
+// Function to validate history entry before adding
+function validateHistoryEntry(entry) {
+    if (!entry.date || !entry.supplier1 || !entry.totalAmount) {
+        alert("Please fill in all required fields: Date, Supplier 1, and Total Amount.");
+        return false;
     }
+    return true;
+}
 
-   
-    </script>
+// Example usage of adding a new entry with validation
+
+
+if (validateHistoryEntry(newEntry)) {
+    addHistoryEntry(newEntry);
+}
+
+// Function to clear all history entries from the table display
+function clearHistoryDisplay() {
+    const historyBody = document.getElementById("historyBody");
+    historyBody.innerHTML = ""; // Clear existing entries
+}
+
+// Add an event listener to a button for clearing the display
+document.getElementById("clearDisplayButton").addEventListener("click", clearHistoryDisplay);
+
+// Function to update an existing history entry
+function updateHistoryEntry(index, updatedEntry) {
+    const historyData = JSON.parse(localStorage.getItem("invoiceHistory")) || [];
+    if (index >= 0 && index < historyData.length) {
+        historyData[index] = updatedEntry;
+        localStorage.setItem("invoiceHistory", JSON.stringify(historyData));
+        loadHistory(); // Reload the history to show the updated entry
+    } else {
+        alert("Invalid entry index.");
+    }
+}
+
+// Example usage of updating an entry
+const updatedEntry = {
+    date: "2023-10-01",
+    supplier1: "Updated Supplier A",
+    supplier2: "Supplier B",
+    supplier3: "Supplier C",
+    lowestSupplier: "Supplier B",
+    totalAmount: 1600
+};
+updateHistoryEntry(0, updatedEntry); // Update the first entry
+
+// Function to display a confirmation dialog before clearing history
+function confirmClearHistory() {
+    const confirmation = confirm("Are you sure you want to clear the history?");
+    if (confirmation) {
+        clearHistory(); // Call the clearHistory function if confirmed
+    }
+}
+
+// Add an event listener to a button for confirming history clearance
+document.getElementById("confirmClearHistoryButton").addEventListener("click", confirmClearHistory);
+
+// Function to display a specific history entry in a modal for editing
+function displayEntryForEditing(index) {
+    const historyData = JSON.parse(localStorage.getItem("invoiceHistory")) || [];
+    if (index >= 0 && index < historyData.length) {
+        const entry = historyData[index];
+        document.getElementById("editDateInput").value = entry.date;
+        document.getElementById("editSupplier1Input").value = entry.supplier1;
+        document.getElementById("editSupplier2Input").value = entry.supplier2;
+        document.getElementById("editSupplier3Input").value = entry.supplier3;
+        document.getElementById("editLowestSupplierInput").value = entry.lowestSupplier;
+        document.getElementById("editTotalAmountInput").value = entry.totalAmount;
+        document.getElementById("editEntryIndex").value = index; // Store index for updating
+        // Show the modal (assuming a modal exists in the HTML)
+        $('#editEntryModal').modal('show');
+    } else {
+        alert("Invalid entry index.");
+    }
+}
+
+// Add an event listener to a button for editing an entry
+document.getElementById("editEntryButton").addEventListener("click", () => {
+    const index = parseInt(document.getElementById("editEntryIndex").value);
+    const updatedEntry = {
+        date: document.getElementById("editDateInput").value,
+        supplier1: document.getElementById("editSupplier1Input").value,
+        supplier2: document.getElementById("editSupplier2Input").value,
+        supplier3: document.getElementById("editSupplier3Input").value,
+        lowestSupplier: document.getElementById("editLowestSupplierInput").value,
+        totalAmount: parseFloat(document.getElementById("editTotalAmountInput").value)
+    };
+    if (validateHistoryEntry(updatedEntry)) {
+        updateHistoryEntry(index, updatedEntry);
+        $('#editEntryModal').modal('hide'); // Hide the modal after updating
+    }
+});
+
+// Function to highlight the lowest supplier in the history table
+function highlightLowestSupplier() {
+    const historyData = JSON.parse(localStorage.getItem("invoiceHistory")) || [];
+    const historyBody = document.getElementById("historyBody");
     
+    historyData.forEach(entry => {
+        const row = document.createElement("tr");
+        const isLowest = entry.supplier1 === entry.lowestSupplier || 
+                        entry.supplier2 === entry.lowestSupplier || 
+                        entry.supplier3 === entry.lowestSupplier;
+        row.innerHTML = `
+            <td class="border px-4 py-2">${entry.date}</td>
+            <td class="border px-4 py-2 ${isLowest ? 'bg-yellow-200' : ''}">${entry.supplier1}</td>
+            <td class="border px-4 py-2 ${isLowest ? 'bg-yellow-200' : ''}">${entry.supplier2}</td>
+            <td class="border px-4 py-2 ${isLowest ? 'bg-yellow-200' : ''}">${entry.supplier3}</td>
+            <td class="border px-4 py-2">${entry.lowestSupplier}</td>
+            <td class="border px-4 py-2">${entry.totalAmount}</td>
+        `;
+        historyBody.appendChild(row);
+    });
+}
+
+// Call the function to highlight the lowest supplier when loading history
+window.onload = () => {
+    loadHistory();
+    highlightLowestSupplier();
+};
+
+// Function to reset the history and clear localStorage
+function resetHistory() {
+    localStorage.removeItem("invoiceHistory");
+    clearHistoryDisplay(); // Clear the display after resetting
+}
+
+// Add an event listener to a button for resetting history
+document.getElementById("resetHistoryButton").addEventListener("click", resetHistory);
+
+// Function to toggle the visibility of the history table
+function toggleHistoryTable() {
+    const historyTable = document.getElementById("historyTable");
+    if (historyTable.style.display === "none" || historyTable.style.display === "") {
+        historyTable.style.display = "table"; // Show the table
+    } else {
+        historyTable.style.display = "none"; // Hide the table
+    }
+}
+
+// Add an event listener to a button for toggling the history table
+document.getElementById("toggleHistoryButton").addEventListener("click", toggleHistoryTable);
+
+// Function to calculate and display the total amount of all history entries
+function displayTotalAmount() {
+    const historyData = JSON.parse(localStorage.getItem("invoiceHistory")) || [];
+    const totalAmount = historyData.reduce((sum, entry) => sum + entry.totalAmount, 0);
+    document.getElementById("totalAmountDisplay").innerText = `Total Amount: $${totalAmount.toFixed(2)}`;
+}
+
+// Call the function to display the total amount when loading history
+window.onload = () => {
+    loadHistory();
+    highlightLowestSupplier();
+    displayTotalAmount(); // Display total amount on load
+};
+
+// Function to filter history entries by supplier name
+function filterHistoryBySupplier(supplierName) {
+    const historyData = JSON.parse(localStorage.getItem("invoiceHistory")) || [];
+    const filteredData = historyData.filter(entry => 
+        entry.supplier1.includes(supplierName) || 
+        entry.supplier2.includes(supplierName) || 
+        entry.supplier3.includes(supplierName)
+    );
+    const historyBody = document.getElementById("historyBody");
+    historyBody.innerHTML = ""; // Clear existing entries
+
+    filteredData.forEach(entry => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td class="border px-4 py-2">${entry.date}</td>
+            <td class="border px-4 py-2">${entry.supplier1}</td>
+            <td class="border px-4 py-2">${entry.supplier2}</td>
+            <td class="border px-4 py-2">${entry.supplier3}</td>
+            <td class="border px-4 py-2">${entry.lowestSupplier}</td>
+            <td class="border px-4 py-2">${entry.totalAmount}</td>
+        `;
+        historyBody.appendChild(row);
+    });
+}
+
+// Add an event listener to a button for filtering history
+document.getElementById("filterHistoryButton").addEventListener("click", () => {
+    const supplierName = document.getElementById("supplierFilterInput").value;
+    filterHistoryBySupplier(supplierName);
+});
+    </script>
 </body>
 </html>

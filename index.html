@@ -182,6 +182,12 @@
         >
           Upload PDF
         </button>
+        <button
+          class="bg-indigo-500 text-white px-4 py-2 rounded"
+          onclick="document.getElementById('').click()"
+        >
+         Send to email
+        </button>
       </div>
 
       <!-- Uploaded PDF Section -->
@@ -286,7 +292,7 @@
             const row = document.querySelector(
               "#comparisonTable tbody tr:last-child"
             );
-            row.querySelectorAll("td").forEach((cell, i) => {
+            row.querySelectorAll("td").forEach((cell, i) => { 
               if (
                 cell.children.length > 0 &&
                 cell.children[0].tagName === "SELECT"
